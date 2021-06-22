@@ -50,27 +50,53 @@ public class RelativeDateApplication {
 				JsonReader read = new JsonReader(br);
 				SimulationData data = gson.fromJson(read,
 						SimulationData.class);
-				for (Evento evento : data.getEventos()) {
+				data.getSetupEscenario()
+						.setFechaInicio(fecha.format(
+								DateTimeFormatter.ofPattern(
+										"yyyy-MM-dd HH:mm:ss")));
+				data.ordenarEventos();
+				for (int i = 0; i < data.getEventos()
+						.size(); i++) {
+					Evento evento = data.getEventos()
+							.get(i);
 					fecha = fecha.plusDays(Long.valueOf(
 							evento.getDiaRespectoInicio()));
 					String fechaFormateada = fecha.format(
 							DateTimeFormatter.ofPattern(
 									"yyyy-MM-dd HH:mm:ss"));
 					evento.setFecha(fechaFormateada);
-					fecha = LocalDateTime.now();
+					if (i == data.getEventos().size() - 1) {
+						fecha = fecha.plusDays(Long.valueOf(
+								evento.getDiaRespectoInicio()));
+					} else {
+						fecha = fecha.minusDays(
+								Long.valueOf(evento
+										.getDiaRespectoInicio()));
+					}
+
 				}
+
+//				for (Evento evento : data.getEventos()) {
+//					fecha = fecha.plusDays(Long.valueOf(
+//							evento.getDiaRespectoInicio()));
+//					String fechaFormateada = fecha.format(
+//							DateTimeFormatter.ofPattern(
+//									"yyyy-MM-dd HH:mm:ss"));
+//					evento.setFecha(fechaFormateada);
+//					fecha = fecha.minusDays(Long.valueOf(
+//							evento.getDiaRespectoInicio()));
+//
+//				}
 				Writer writer = new FileWriter(
 						"C:\\Users\\Usuario\\Desktop\\New folder\\"
 								+ new Random().nextDouble()
 								+ ".json");
-//				Gson gson = new GsonBuilder()
-//						.setPrettyPrinting().create();
 				gson.toJson(data, writer);
-				writer.flush(); // flush data to file <---
+				writer.flush();
 				writer.close();
 				System.out.println("Nuevo caso");
-				data.getEventos().forEach(m -> System.out
-						.println(m.getFecha()));
+				data.getEventos().forEach(l -> System.out
+						.println(l.getFecha()));
 
 			}
 		}

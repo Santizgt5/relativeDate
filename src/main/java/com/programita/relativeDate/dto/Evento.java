@@ -24,15 +24,7 @@ public class Evento implements Comparable<Evento> {
 
 	@Override
 	public int compareTo(Evento o) {
-		if (this.fecha == null || o.getFecha() == null)
-			return 0;
-		DateTimeFormatter formatter = DateTimeFormatter
-				.ofPattern("yyyy-MM-dd HH:mm:ss");
-		LocalDateTime dateTime = LocalDateTime.parse(fecha,
-				formatter);
-		LocalDateTime dateTime2 = LocalDateTime
-				.parse(o.getFecha(), formatter);
-		return dateTime.compareTo(dateTime2);
+		return diaRespectoInicio - o.getDiaRespectoInicio();
 	}
 
 	public String getFormatoFecha() {

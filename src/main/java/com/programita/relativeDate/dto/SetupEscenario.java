@@ -8,4 +8,5 @@ public class SetupEscenario {
 	private String identificadorPrueba;
 	private String institucion;
 	private String password;
+	private String fechaInicio;
 }

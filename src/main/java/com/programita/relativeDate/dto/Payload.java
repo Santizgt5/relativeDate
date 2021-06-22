@@ -20,24 +20,31 @@ public class Payload {
 	private String estadoEsperado;
 	private String tipoCargaFile;
 	private String fechaFinalizacionComunidad;
-	private ArrayList<Persona> personasCercadas = new ArrayList<>();
+	private ArrayList<Persona> personasCercadas;
 
 	public String getRepuestasPreguntasFormated() {
-		String respuestasPreguntas = this.respuestasPreguntas.stream()
-				.map(m -> "Pregunta #" + m.getPreguntaId() + ":" + m.getRespuesta()).collect(Collectors.toList())
-				.toString();
+		String respuestasPreguntas = this.respuestasPreguntas
+				.stream()
+				.map(m -> "Pregunta #" + m.getPreguntaId()
+						+ ":" + m.getRespuesta())
+				.collect(Collectors.toList()).toString();
 
 		return respuestasPreguntas;
 	}
 
 	public String getFormatoFechaFinalizacion() {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-		LocalDateTime dateTime = LocalDateTime.parse(fechaFinalizacionComunidad, formatter);
-		String dia = String.valueOf(dateTime.getDayOfMonth());
-		String mes = String.valueOf(dateTime.getMonth().getValue());
+		DateTimeFormatter formatter = DateTimeFormatter
+				.ofPattern("yyyy-MM-dd HH:mm:ss");
+		LocalDateTime dateTime = LocalDateTime.parse(
+				fechaFinalizacionComunidad, formatter);
+		String dia = String
+				.valueOf(dateTime.getDayOfMonth());
+		String mes = String
+				.valueOf(dateTime.getMonth().getValue());
 		String year = String.valueOf(dateTime.getYear());
 		String hora = String.valueOf(dateTime.getHour());
-		return String.format("%s-%s-%s %s:00:00", year, mes, dia, hora);
+		return String.format("%s-%s-%s %s:00:00", year, mes,
+				dia, hora);
 	}
 
 	public String generateInformation(String tipoEvento) {
@@ -50,13 +57,17 @@ public class Payload {
 			resp = getRepuestasPreguntasFormated();
 			break;
 		case "Realizar Tamizaje":
-			resp = "Se simulara un tamizaje con la temperatura: " + this.tamizaje.getTemperatura();
+			resp = "Se simulara un tamizaje con la temperatura: "
+					+ this.tamizaje.getTemperatura();
 			break;
 		case "Crear Comunidad":
 			resp = "Se simulara la creacion de una comunidad";
 			break;
 		case "Cargar resultado examen":
-			resp = "Se simulara una carga de prueba " + (this.tipoCargaFile.equals("Y") ? "positiva" : "negativa")
+			resp = "Se simulara una carga de prueba "
+					+ (this.tipoCargaFile.equals("Y")
+							? "positiva"
+							: "negativa")
 					+ "de covid";
 			break;
 		case "Obtener cercos epidemiologicos":

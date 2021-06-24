@@ -9,6 +9,7 @@ import java.io.Writer;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
+import java.util.Scanner;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -31,18 +32,46 @@ public class RelativeDateApplication {
 			throws JsonIOException, IOException {
 		SpringApplication.run(RelativeDateApplication.class,
 				args);
+		askForDate();
+	}
 
-		readFiles();
+	public static void askForDate() {
+		Scanner in = new Scanner(System.in);
+
+		System.out.println("Ingresa el dia: ");
+		String dia = in.nextLine();
+		System.out.println("Ingresa el mes: ");
+		String mes = in.nextLine();
+		System.out.println("Ingresa el anio: ");
+		String anio = in.nextLine();
+		System.out.println("Ingresa la hora: ");
+		String hora = in.nextLine();
+		System.out.println("Ingresa el minuto: ");
+		String minuto = in.nextLine();
+
+		LocalDateTime date = LocalDateTime.of(
+				Integer.valueOf(anio), Integer.valueOf(mes),
+				Integer.valueOf(dia), Integer.valueOf(hora),
+				Integer.valueOf(minuto));
+		try {
+			readFiles(date);
+		} catch (JsonIOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 
-	public static void readFiles()
+	public static void readFiles(LocalDateTime initialDate)
+
 			throws JsonIOException, IOException {
 		File folder = new File(
 				"C:\\Users\\Usuario\\Desktop\\New folder");
 		File[] listOfFiles = folder.listFiles();
 
-		LocalDateTime fecha = LocalDateTime.now();
 		for (File file : listOfFiles) {
 			if (file.isFile()) {
 				BufferedReader br = new BufferedReader(
@@ -51,7 +80,7 @@ public class RelativeDateApplication {
 				SimulationData data = gson.fromJson(read,
 						SimulationData.class);
 				data.getSetupEscenario()
-						.setFechaInicio(fecha.format(
+						.setFechaInicio(initialDate.format(
 								DateTimeFormatter.ofPattern(
 										"yyyy-MM-dd HH:mm:ss")));
 				data.ordenarEventos();
@@ -59,34 +88,27 @@ public class RelativeDateApplication {
 						.size(); i++) {
 					Evento evento = data.getEventos()
 							.get(i);
-					fecha = fecha.plusDays(Long.valueOf(
-							evento.getDiaRespectoInicio()));
-					String fechaFormateada = fecha.format(
-							DateTimeFormatter.ofPattern(
-									"yyyy-MM-dd HH:mm:ss"));
+					initialDate = initialDate
+							.plusDays(Long.valueOf(evento
+									.getDiaRespectoInicio()));
+
+					String fechaFormateada = initialDate
+							.plusMinutes(i * 2 + 10)
+							.format(DateTimeFormatter
+									.ofPattern(
+											"yyyy-MM-dd HH:mm:ss"));
 					evento.setFecha(fechaFormateada);
 					if (i == data.getEventos().size() - 1) {
-						fecha = fecha.plusDays(Long.valueOf(
-								evento.getDiaRespectoInicio()));
+						initialDate = initialDate.plusDays(
+								Long.valueOf(evento
+										.getDiaRespectoInicio()));
 					} else {
-						fecha = fecha.minusDays(
+						initialDate = initialDate.minusDays(
 								Long.valueOf(evento
 										.getDiaRespectoInicio()));
 					}
 
 				}
-
-//				for (Evento evento : data.getEventos()) {
-//					fecha = fecha.plusDays(Long.valueOf(
-//							evento.getDiaRespectoInicio()));
-//					String fechaFormateada = fecha.format(
-//							DateTimeFormatter.ofPattern(
-//									"yyyy-MM-dd HH:mm:ss"));
-//					evento.setFecha(fechaFormateada);
-//					fecha = fecha.minusDays(Long.valueOf(
-//							evento.getDiaRespectoInicio()));
-//
-//				}
 				Writer writer = new FileWriter(
 						"C:\\Users\\Usuario\\Desktop\\New folder\\"
 								+ new Random().nextDouble()

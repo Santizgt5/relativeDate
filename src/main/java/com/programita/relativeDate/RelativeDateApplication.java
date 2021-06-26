@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Random;
 import java.util.Scanner;
 
 import org.springframework.boot.SpringApplication;
@@ -111,8 +110,9 @@ public class RelativeDateApplication {
 				}
 				Writer writer = new FileWriter(
 						"C:\\Users\\Usuario\\Desktop\\New folder\\"
-								+ new Random().nextDouble()
-								+ ".json");
+								+ file.getName().replace(
+										"_base",
+										"_plantilla"));
 				gson.toJson(data, writer);
 				writer.flush();
 				writer.close();

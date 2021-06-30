@@ -82,6 +82,7 @@ public class RelativeDateApplication {
 						.setFechaInicio(initialDate.format(
 								DateTimeFormatter.ofPattern(
 										"yyyy-MM-dd HH:mm:ss")));
+
 				data.ordenarEventos();
 				for (int i = 0; i < data.getEventos()
 						.size(); i++) {
@@ -91,12 +92,25 @@ public class RelativeDateApplication {
 							.plusDays(Long.valueOf(evento
 									.getDiaRespectoInicio()));
 
-					String fechaFormateada = initialDate
-							.plusMinutes(i * 2 + 10)
+					LocalDateTime staticDate = initialDate
+							.plusMinutes(i * 2 + 10);
+
+					String fechaFormateada = staticDate
 							.format(DateTimeFormatter
 									.ofPattern(
 											"yyyy-MM-dd HH:mm:ss"));
 					evento.setFecha(fechaFormateada);
+					if (evento
+							.getTipoEvento() == "Crear Comunidad") {
+						evento.getPayload()
+								.setFechaFinalizacionComunidad(
+										staticDate
+												.plusMinutes(
+														1)
+												.format(DateTimeFormatter
+														.ofPattern(
+																"yyyy-MM-dd HH:mm:ss")));
+					}
 					if (i == data.getEventos().size() - 1) {
 						initialDate = initialDate.plusDays(
 								Long.valueOf(evento

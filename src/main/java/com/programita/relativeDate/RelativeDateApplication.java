@@ -100,8 +100,8 @@ public class RelativeDateApplication {
 									.ofPattern(
 											"yyyy-MM-dd HH:mm:ss"));
 					evento.setFecha(fechaFormateada);
-					if (evento
-							.getTipoEvento() == "Crear Comunidad") {
+					if (evento.getTipoEvento()
+							.equals("Crear Comunidad")) {
 						evento.getPayload()
 								.setFechaFinalizacionComunidad(
 										staticDate
